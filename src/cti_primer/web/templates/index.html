@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CTI Primer</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+        h1 { margin-bottom: 0.5rem; }
+        .subtitle { color: #666; margin-bottom: 2rem; }
+        .card { border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card h2 { margin-bottom: 1rem; font-size: 1.1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+        input[type="file"] { margin-bottom: 1rem; }
+        button { background: #2563eb; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        button:hover { background: #1d4ed8; }
+        .mode-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+        .mode-llm { background: #dbeafe; color: #1e40af; }
+        .mode-no-llm { background: #fef3c7; color: #92400e; }
+    </style>
+</head>
+<body>
+    <h1>CTI Primer</h1>
+    <p class="subtitle">
+        Local-first CTI PIR Generation
+        {% if no_llm %}
+        <span class="mode-badge mode-no-llm">Dictionary Mode</span>
+        {% else %}
+        <span class="mode-badge mode-llm">LLM Mode</span>
+        {% endif %}
+    </p>
+
+    <div class="card">
+        <h2>Generate PIR from Business Context</h2>
+        <form action="/generate" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label for="file">Upload context file (.json or .md)</label>
+            <input type="file" id="file" name="file" accept=".json,.md,.markdown" required>
+            <button type="submit">Generate PIR</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Load Existing PIR</h2>
+        <form action="/load" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label for="pir_file">Upload PIR output (.json)</label>
+            <input type="file" id="pir_file" name="file" accept=".json" required>
+            <button type="submit">Load &amp; Review</button>
+        </form>
+    </div>
+</body>
+</html>

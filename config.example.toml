@@ -1,0 +1,12 @@
+[llm]
+endpoint = "http://localhost:1234/v1"
+model    = "google/gemma-4-26b-a4b"
+api_key  = ""
+
+[sage]
+api_url = "http://localhost:8080"
+
+[github]
+host      = ""
+token_env = "GITHUB_TOKEN"
+repo      = ""

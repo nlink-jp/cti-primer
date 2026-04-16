@@ -1,0 +1,118 @@
+{
+  "organization": {
+    "name": "Acme Manufacturing Co.",
+    "industry": "manufacturing",
+    "geography": ["JP", "US", "CN"],
+    "employee_range": "5000-10000",
+    "revenue_range": "$1B-$5B",
+    "regulatory_context": ["ITAR", "SOX"],
+    "is_publicly_listed": true
+  },
+  "strategic_objectives": [
+    {
+      "description": "Migrate core ERP to cloud by 2027",
+      "sensitivity": "high",
+      "timeline": "2026-2027",
+      "key_decisions": ["Cloud provider selection", "Data residency"]
+    },
+    {
+      "description": "Expand OT monitoring capabilities",
+      "sensitivity": "critical",
+      "timeline": "2026 Q3"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Cloud Migration Phase 2",
+      "description": "Migrate SAP ERP and related systems to GCP",
+      "status": "in_progress",
+      "vendors": ["SAP", "Accenture"],
+      "cloud_providers": ["GCP"],
+      "data_types": ["financial", "pii", "intellectual_property"]
+    },
+    {
+      "name": "OT Network Segmentation",
+      "description": "Implement micro-segmentation for factory floor networks",
+      "status": "planned",
+      "vendors": ["Claroty"],
+      "data_types": ["operational"]
+    }
+  ],
+  "crown_jewels": [
+    {
+      "name": "Product Design Database",
+      "description": "CAD files and manufacturing specs for all product lines",
+      "business_impact": "critical",
+      "exposure": "internal"
+    },
+    {
+      "name": "Customer PII Database",
+      "description": "Global customer records including payment data",
+      "business_impact": "high",
+      "exposure": "partner"
+    },
+    {
+      "name": "Factory Control Systems",
+      "description": "SCADA and PLC systems across 12 manufacturing plants",
+      "business_impact": "critical",
+      "exposure": "internal"
+    }
+  ],
+  "critical_assets": [
+    {
+      "asset_id": "asset-erp-001",
+      "hostname": "sap-prod-primary",
+      "os": "SLES 15",
+      "network_zone": "internal",
+      "asset_type": "server",
+      "dependencies": ["asset-db-001", "asset-ad-001"],
+      "criticality": "critical"
+    },
+    {
+      "asset_id": "asset-scada-001",
+      "hostname": "scada-master",
+      "network_zone": "ot",
+      "asset_type": "ot-controller",
+      "criticality": "critical"
+    },
+    {
+      "asset_id": "asset-db-001",
+      "hostname": "db-customer-primary",
+      "os": "Oracle Linux 9",
+      "network_zone": "internal",
+      "asset_type": "server",
+      "criticality": "high"
+    }
+  ],
+  "supply_chain": [
+    {
+      "name": "SAP",
+      "category": "erp",
+      "has_ot_connectivity": false
+    },
+    {
+      "name": "Claroty",
+      "category": "software",
+      "has_ot_connectivity": true
+    },
+    {
+      "name": "GCP",
+      "category": "cloud",
+      "has_ot_connectivity": false
+    }
+  ],
+  "recent_incidents": [
+    {
+      "year": 2025,
+      "incident_type": "ransomware_attempt",
+      "impact": "contained",
+      "description": "LockBit affiliate phishing campaign targeting finance department"
+    },
+    {
+      "year": 2024,
+      "incident_type": "supply_chain_compromise",
+      "impact": "medium",
+      "description": "Compromised vendor credentials used to access development environment"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PIR Review — CTI Primer</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+        h1 { margin-bottom: 0.5rem; }
+        .org-name { color: #666; margin-bottom: 2rem; }
+        .pir-card { border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .pir-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .pir-id { font-weight: 700; font-size: 1.1rem; }
+        .level-badge { padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+        .level-strategic { background: #fee2e2; color: #991b1b; }
+        .level-operational { background: #fef3c7; color: #92400e; }
+        .level-tactical { background: #dbeafe; color: #1e40af; }
+        label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; font-size: 0.9rem; }
+        textarea { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; resize: vertical; }
+        .tags { margin: 0.5rem 0; }
+        .tag { display: inline-block; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; margin: 2px; }
+        .focus-list { list-style: disc; padding-left: 1.5rem; margin: 0.5rem 0; }
+        .actions { margin-top: 2rem; display: flex; gap: 1rem; }
+        button { background: #2563eb; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        button:hover { background: #1d4ed8; }
+        .btn-secondary { background: #6b7280; }
+        .btn-secondary:hover { background: #4b5563; }
+        .btn-export { background: #059669; }
+        .btn-export:hover { background: #047857; }
+        .score { color: #666; font-size: 0.9rem; margin: 0.5rem 0; }
+        a { color: #2563eb; }
+    </style>
+</head>
+<body>
+    <h1>PIR Review</h1>
+    <p class="org-name">{{ pir.organization }} — {{ pir.pir_items | length }} PIR(s)</p>
+
+    {% for item in pir.pir_items %}
+    <div class="pir-card" data-pir-id="{{ item.pir_id }}">
+        <div class="pir-header">
+            <span class="pir-id">{{ item.pir_id }}</span>
+            <span class="level-badge level-{{ item.intelligence_level }}">
+                {{ item.intelligence_level | upper }}
+            </span>
+        </div>
+
+        <label for="desc-{{ item.pir_id }}">Description</label>
+        <textarea id="desc-{{ item.pir_id }}" name="description" rows="2">{{ item.description }}</textarea>
+
+        <label for="rationale-{{ item.pir_id }}">Rationale</label>
+        <textarea id="rationale-{{ item.pir_id }}" name="rationale" rows="2">{{ item.rationale }}</textarea>
+
+        {% if item.collection_focus %}
+        <label>Collection Focus</label>
+        <ul class="focus-list">
+            {% for focus in item.collection_focus %}
+            <li>{{ focus }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <label for="action-{{ item.pir_id }}">Recommended Action</label>
+        <textarea id="action-{{ item.pir_id }}" name="recommended_action" rows="1">{{ item.recommended_action }}</textarea>
+
+        {% if item.threat_actor_tags %}
+        <label>Threat Actor Tags</label>
+        <div class="tags">
+            {% for tag in item.threat_actor_tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if item.risk_score %}
+        <p class="score">
+            Risk: L={{ item.risk_score.likelihood }} I={{ item.risk_score.impact }}
+            Composite={{ item.risk_score.composite }}
+            {% if item.risk_score.sage_boosted %}(SAGE boosted){% endif %}
+        </p>
+        {% endif %}
+
+        <p class="score">Valid: {{ item.valid_from[:10] }} — {{ item.valid_until[:10] }}</p>
+
+        <button onclick="savePIR('{{ item.pir_id }}')" style="margin-top: 0.5rem;">Save Changes</button>
+    </div>
+    {% endfor %}
+
+    {% if not pir.pir_items %}
+    <div class="pir-card">
+        <p>No PIR items generated. Risk scores were below the threshold.</p>
+    </div>
+    {% endif %}
+
+    <div class="actions">
+        <a href="/"><button class="btn-secondary">Back</button></a>
+        <a href="/review/export"><button class="btn-export">Export JSON</button></a>
+        <button onclick="approveAll()">Approve &amp; Create Issues</button>
+    </div>
+
+    <script>
+        function savePIR(pirId) {
+            const card = document.querySelector(`[data-pir-id="${pirId}"]`);
+            const form = new FormData();
+            form.append('csrf_token', '{{ csrf_token }}');
+            form.append('pir_id', pirId);
+            form.append('description', card.querySelector('[name="description"]').value);
+            form.append('rationale', card.querySelector('[name="rationale"]').value);
+            form.append('recommended_action', card.querySelector('[name="recommended_action"]').value);
+            fetch('/review/save', { method: 'POST', body: form })
+                .then(r => r.json())
+                .then(d => alert('Saved'))
+                .catch(e => alert('Error: ' + e));
+        }
+        function approveAll() {
+            if (!confirm('Create GitHub Issues for all PIRs?')) return;
+            const form = new FormData();
+            form.append('csrf_token', '{{ csrf_token }}');
+            fetch('/review/approve', { method: 'POST', body: form })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.issues) alert('Created ' + d.issues.length + ' issues');
+                    else alert(JSON.stringify(d));
+                })
+                .catch(e => alert('Error: ' + e));
+        }
+    </script>
+</body>
+</html>

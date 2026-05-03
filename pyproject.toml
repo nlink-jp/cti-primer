@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "cti-primer"
-version = "0.1.0"
+version = "0.1.1"
 description = "Local-first CTI PIR generation tool with LLM-powered analysis"
 requires-python = ">=3.12"
 license = "Apache-2.0"
@@ -20,7 +20,7 @@ dependencies = [
     "pypdf>=5.0,<6.0",
     "beautifulsoup4>=4.12,<5.0",
     "structlog>=24.4,<26.0",
-    "nlk @ git+https://github.com/nlink-jp/nlk-py.git",
+    "nlk @ git+https://github.com/nlink-jp/nlk-py.git@v0.2.2",
 ]
 
 [project.scripts]

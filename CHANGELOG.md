@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1] - 2026-05-03
+
+### Fixed
+
+- Pin nlk-py to v0.2.2 to pick up the strip fix: think-tag handling
+  no longer truncates LLM responses that explain the literal
+  `<think>` tag inside a markdown inline-code span.
+
 ## [0.1.0] - 2026-04-16
 
 ### Added

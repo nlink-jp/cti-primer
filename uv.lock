@@ -244,7 +244,7 @@ wheels = [
 
 [[package]]
 name = "cti-primer"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -278,7 +278,7 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.115,<1.0" },
     { name = "httpx", specifier = ">=0.27,<1.0" },
     { name = "jinja2", specifier = ">=3.1,<4.0" },
-    { name = "nlk", git = "https://github.com/nlink-jp/nlk-py.git" },
+    { name = "nlk", git = "https://github.com/nlink-jp/nlk-py.git?rev=v0.2.2" },
     { name = "pydantic", specifier = ">=2.0,<3.0" },
     { name = "pypdf", specifier = ">=5.0,<6.0" },
     { name = "python-multipart", specifier = ">=0.0.12" },
@@ -474,8 +474,8 @@ wheels = [
 
 [[package]]
 name = "nlk"
-version = "0.2.1"
-source = { git = "https://github.com/nlink-jp/nlk-py.git#c04934358c567db4cbdf8c1cbd9df4e575417d0d" }
+version = "0.2.2"
+source = { git = "https://github.com/nlink-jp/nlk-py.git?rev=v0.2.2#2fb59a119bacd50b357183b686a81beca691a318" }
 
 [[package]]
 name = "nodeenv"
